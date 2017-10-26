@@ -1,0 +1,107 @@
+doctype html
+html
+	head
+		title Manage interest rate swaps
+		include bootstrap-css.pug
+
+	body
+		include navbar.pug
+
+		div.container
+			include error-notifs.pug
+
+				div.row.irs-header
+					- var marketValue = (irs.marketValue ? "$" + marketValue : "N/A")
+					- var effectiveDate = new Date(irs.effectiveDate)
+					- var effectiveDateStr = effectiveDate.toUTCString()
+					- var maturityDate = new Date(irs.maturityDate)
+					- var maturityDateStr = maturityDate.toUTCString()
+					- var participant1IsUser = irs.participant1.substring(36) == userStr
+					- var otherParticipantStr = (participant1IsUser ? irs.participant2 : irs.participant1).substring(36)
+					- var interestRate1 = JSON.parse(irs.interestRate1)
+					- var interestRate2 = JSON.parse(irs.interestRate2)
+
+					- var selfApproved = (participant1IsUser ? irs.participant1Approved : irs.participant2Approved)
+					- var otherApproved = (participant1IsUser ? irs.participant2Approved : irs.participant1Approved)
+
+					h1.content-header
+						span.table-with-button-header-text= "ID: "
+						if !selfApproved
+							a(href="/manage/approve?id=" + irs.id).btn.btn-success.pull-right
+								span.glyphicon.glyphicon-ok.button-glyphicon
+								span.button-text Approve
+						h3.content-header= irs.id
+						if !selfApproved
+							a(href="/manage/deny?id=" + irs.id).btn.btn-danger.pull-right
+								span.glyphicon.glyphicon-remove.button-glyphicon
+								span.button-text Deny
+
+					h1.content-header
+						span.table-with-button-header-text= "Other Participant: "
+						h3.content-header= otherParticipantStr + (!otherApproved ? " (still awaiting approval)" : "")
+
+					h1.content-header
+						span.table-with-button-header-text= "Amount: "
+						h3.content-header= "$" + irs.value.toFixed(2)
+
+					h1.content-header
+						span.table-with-button-header-text= "Tenor: "
+						h3.content-header= irs.tenor
+
+					h1.content-header
+						span.table-with-button-header-text= "Effective Date: "
+						h3.content-header= effectiveDateStr
+
+					h1.content-header
+						span.table-with-button-header-text= "Maturity Date: "
+						h3.content-header= maturityDateStr
+
+					h1.content-header
+						span.table-with-button-header-text= "Your Rate: "
+					table.table.table-striped.table-hover
+						thead
+						each key in Object.keys(participant1IsUser ? interestRate1 : interestRate2)
+							- var keyStr = key.charAt(0).toUpperCase() + key.slice(1)
+							th= keyStr
+						tbody
+						each value in interestRate1
+							td= value
+
+					h1.content-header
+						span.table-with-button-header-text= "Other's Rate: "
+					table.table.table-striped.table-hover
+						thead
+						each key in Object.keys(participant1IsUser ? interestRate2 : interestRate1)
+							- var keyStr = key.charAt(0).toUpperCase() + key.slice(1)
+							th= keyStr
+						tbody
+						each value in interestRate2
+							td= value
+
+				
+					h1.content-header
+						span.table-with-button-header-text= "Payments: "
+					table.table.table-striped.table-hover
+						thead
+							th Completed
+							th Date
+							th Your Rate
+							th Other's rate
+							th  
+						tbody
+						each payment in irs.payments
+							- var paymentDateStr = new Date(payment.effectiveDate).toUTCString()
+							- var settleHREF = "/manage/settle?id=" + irs.id + '&index=' + payment.index
+							tr
+								td= payment.completed
+								td= paymentDateStr
+								td= payment.completed ? (participant1IsUser ? payment.rate1 : payment.rate2) : "-"
+								td= payment.completed ? (participant1IsUser ? payment.rate2 : payment.rate1) : "-"
+								if !payment.completed && selfApproved && otherApproved
+									td
+										a(href=settleHREF) Settle
+								else
+									td 
+		
+		include bootstrap-js.pug
+		script(src="/static/js/manage.js" type="text/javascript")

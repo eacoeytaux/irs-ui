@@ -1,0 +1,25 @@
+body {
+	padding-top: 70px;
+}
+
+.bottom-align-div {
+	vertical-align: bottom;
+}
+
+.irs-header {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.table-with-button-header-text {
+	margin-right: 40px;
+}
+
+.button-glyphicon {
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+.table tbody > tr > td.vert-aligned {
+	vertical-align: middle;
+}

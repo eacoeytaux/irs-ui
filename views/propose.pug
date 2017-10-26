@@ -1,0 +1,84 @@
+doctype html
+html
+	head
+		title Manage paper
+		include bootstrap-css.pug
+
+	body
+		include navbar.pug
+
+		div.container
+			div.row
+				div.well.col-sm-6.col-sm-offset-3
+					form(action="/manage/propose", method="POST").form-horizontal
+						include error-notifs.pug
+						div.h1 New interest rate swap
+						fieldset(id="inputFields")
+							div.h3 Required Parameters
+							div.form-group
+								label(for="company").col-sm-2.control-label Other Participant
+								div.col-sm-10(id="companyInput")
+									select(type="select", name="company").form-control#company
+										option 
+										each company in companies
+											if company.name != userStr
+												option= company.name
+
+							div.form-group
+								label(for="IRSValue").col-sm-2.control-label Value
+								div.col-sm-10.is-empty(id="IRSValueInput")
+									input(autocomplete="off", type="number", step="any", name="IRSValue").form-control#IRSValue
+							div.form-group
+								label(for="tenor").col-sm-2.control-label Tenor
+								div.col-sm-10(id="tenorInput")
+									select(type="select", name="tenor").form-control#tenor
+										option  
+										option DAILY
+										option WEEKLY
+										option ONE_MONTH
+										option TWO_MONTH
+										option THREE_MONTH
+										option SEMI_ANNUALLY
+										option ANNUALLY
+							div.form-group
+								label(for="effectiveDate").col-sm-2.control-label Effective date
+								div.col-sm-10.is-empty(id="effectiveDateInput")
+									input(autocomplete="off", type="select", placeholder="MM/DD/YYYY" name="effectiveDate").form-control#effectiveDate
+							div.form-group
+								label(for="maturityDate").col-sm-2.control-label Maturity date
+								div.col-sm-10.is-empty(id="maturityDateInput")
+									input(autocomplete="off", type="select", placeholder="MM/DD/YYYY" name="maturityDate", visibility="hidden").form-control#maturityDate
+							
+							div.h4 Your interest rate
+							div.form-group(id="interestRate1Select")
+								label(for="interestRate1").col-sm-2.control-label Type
+								div.col-sm-10.is-empty(id="interestRate1Input")
+									select(type="select", name="interestRate1").form-control#interestRate1
+										option  
+										option Fixed
+										option LIBOR Index
+							
+							div.h4(id="otherInterestRate") Other participant's interest rate
+							div.form-group(id="interestRate2Select")
+								label(for="interestRate2").col-sm-2.control-label Type
+								div.col-sm-10.is-empty(id="interestRate2Input")
+									select(type="select", name="interestRate2").form-control#interestRate2
+										option  
+										option Fixed
+										option LIBOR Index
+							
+							div.h3(id="optionalParametersLabel") Optional parameters
+							div.form-group
+								label(for="allowUnwind").col-sm-2.control-label Allowing unwinding
+								div.col-sm-10
+									input(autocomplete="off", type="checkbox", name="allowUnwind").form-control#allowUnwind
+							div.form-group
+								label(for="marketValue").col-sm-2.control-label Market value
+								div.col-sm-10(id="marketValueInput")
+									input(autocomplete="off", type="number", name="marketValue", disabled="true").form-control#marketValue
+							div.form-group
+								div.col-sm-offset-2.col-sm-10
+									button(type="submit" id="proposeIRS" disabled="true").btn.btn-primary Issue
+
+		include bootstrap-js.pug
+		script(src="/static/js/propose.js" type="text/javascript")

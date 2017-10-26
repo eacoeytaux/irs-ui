@@ -1,0 +1,48 @@
+doctype html
+html
+	head
+		title Manage interest rate swaps
+		include bootstrap-css.pug
+
+	body
+		include navbar.pug
+
+		div.container
+			include error-notifs.pug
+
+			
+			div.container
+				div.row
+					div.well.col-sm-6.col-sm-offset-3
+						form(action="/view/getLIBOR", method="GET").form-horizontal
+							include error-notifs.pug
+							fieldset(id="inputFields")
+								div.h1.irs-header View LIBOR Index
+								div.form-group
+									label(for="date").col-sm-2.control-label Date
+									div.col-sm-10.is-empty(id="dateInput")
+										input(autocomplete="off", type="select", placeholder="MM/DD/YYYY" name="date").form-control#date
+
+								div.form-group
+									label(for="tenor").col-sm-2.control-label Tenor
+									div.col-sm-10.is-empty(id="tenorInput")
+										select(type="select", name="tenor").form-control#tenor
+											option  
+											option DAILY
+											option WEEKLY
+											option ONE_MONTH
+											option TWO_MONTH
+											option THREE_MONTH
+											option SEMI_ANNUALLY
+											option ANNUALLY
+								div.form-group
+									div.col-sm-offset-2.col-sm-10
+										button(type="submit" id="getLIBOR" disabled="true").btn.btn-primary Find LIBOR
+								if rate
+									if rate != "N/A"
+										div.h3= "Rate for " + tenorStr + " on " + dateStr + ": " + rate
+									else
+										div.h3= "No LIBOR has been posted yet for " + tenorStr + " on " + dateStr
+		
+		include bootstrap-js.pug
+		script(src="/static/js/view.js" type="text/javascript")

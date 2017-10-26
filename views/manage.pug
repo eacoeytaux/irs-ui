@@ -1,0 +1,213 @@
+doctype html
+html
+	head
+		title Manage interest rate swaps
+		include bootstrap-css.pug
+
+	body
+		include navbar.pug
+
+		div.container
+			include error-notifs.pug
+
+			if userType == "Company"
+				div.row.irs-header
+					a(href="/manage").btn.btn-info.pull-left
+						span.glyphicon.glyphicon-refresh.button-glyphicon
+						span.button-text Refresh
+
+				div.row.irs-header
+					h1.content-header
+						span.table-with-button-header-text= userStr + "'s current balance: $" + userBalance.toFixed(2)
+
+				div.row.irs-header
+					h1.content-header
+						span.table-with-button-header-text Proposed IRS's
+						a(href="/manage/propose").btn.btn-success.pull-right
+							span.glyphicon.glyphicon-plus-sign.button-glyphicon
+							span.button-text Propose
+				div.row.irs-table
+				if IRSs.proposed && IRSs.proposed.length > 0
+					table.table.table-striped.table-hover
+						thead
+							th ID
+							th Other Participant
+							th Amount
+							th Effective Date
+							th Maturity Date
+
+							tbody
+							each irs in IRSs.proposed
+								- var effectiveDate = new Date(irs.effectiveDate)
+								- var effectiveDateStr = effectiveDate.toUTCString()
+								- var maturityDate = new Date(irs.maturityDate)
+								- var maturityDateStr = maturityDate.toUTCString()
+								- var participant1IsUser = irs.participant1.substring(36) == userStr
+								- var otherParticipantStr = (participant1IsUser ? irs.participant2 : irs.participant1).substring(36)
+								- var viewHREF = "/manage/view?id=" + irs.id
+								- var approveHREF = "/manage/approve?id=" + irs.id
+								- var denyHREF = "/manage/deny?id=" + irs.id
+								
+								tr
+									td
+										a(href=viewHREF)= irs.id
+									td= otherParticipantStr
+									td= "$" + irs.value
+									td= effectiveDateStr
+									td= maturityDateStr
+				else
+					h3.content-header
+						span Nothing here yet!
+					h5.content-header
+						span (Click the "Propose" button to propose an interest rate swap)
+				
+				div.row.irs-header
+					h1.content-header
+						span.table-with-button-header-text Pending IRS's
+				div.row.irs-table
+				if IRSs.pending && IRSs.pending.length > 0
+					table.table.table-striped.table-hover
+						thead
+							th ID
+							th Other Participant
+							th Amount
+							th Effective Date
+							th Maturity Date
+
+							tbody
+							each irs in IRSs.pending
+								- var effectiveDate = new Date(irs.effectiveDate)
+								- var effectiveDateStr = effectiveDate.toUTCString()
+								- var maturityDate = new Date(irs.maturityDate)
+								- var maturityDateStr = maturityDate.toUTCString()
+								- var participant1IsUser = irs.participant1.substring(36) == userStr
+								- var otherParticipantStr = (participant1IsUser ? irs.participant2 : irs.participant1).substring(36)
+								- var viewHREF = "/manage/view?id=" + irs.id
+								- var approveHREF = "/manage/approve?id=" + irs.id
+								- var denyHREF = "/manage/deny?id=" + irs.id
+								
+								tr
+									td
+										a(href=viewHREF)= irs.id
+									td= otherParticipantStr
+									td= "$" + irs.value
+									td= effectiveDateStr
+									td= maturityDateStr
+				else
+					h3.content-header
+						span Nothing here yet!
+					h5.content-header
+						span (Interest rate swaps proposed by other companies will appear here for your approval)
+
+				div.row.irs-header
+					h1.content-header
+						span.table-with-button-header-text Unsettled IRS's
+				div.row.irs-table
+				if IRSs.inprogress && IRSs.inprogress.length > 0
+					table.table.table-striped.table-hover
+						thead
+							th ID
+							th Other Participant
+							th Amount
+							th Effective Date
+							th Maturity Date
+
+							tbody
+							each irs in IRSs.inprogress
+								- var effectiveDate = new Date(irs.effectiveDate)
+								- var effectiveDateStr = effectiveDate.toUTCString()
+								- var maturityDate = new Date(irs.maturityDate)
+								- var maturityDateStr = maturityDate.toUTCString()
+								- var participant1IsUser = irs.participant1.substring(36) == userStr
+								- var otherParticipantStr = (participant1IsUser ? irs.participant2 : irs.participant1).substring(36)
+								- var viewHREF = "/manage/view?id=" + irs.id
+								- var approveHREF = "/manage/approve?id=" + irs.id
+								- var denyHREF = "/manage/deny?id=" + irs.id
+								
+								tr
+									td
+										a(href=viewHREF)= irs.id
+									td= otherParticipantStr
+									td= "$" + irs.value
+									td= effectiveDateStr
+									td= maturityDateStr
+				else
+					h3.content-header
+						span Nothing here yet!
+					
+				div.row.irs-header
+					h1.content-header
+						span.table-with-button-header-text Settled IRS's
+				div.row.irs-table
+				if IRSs.completed && IRSs.completed.length > 0
+					table.table.table-striped.table-hover
+						thead
+							th ID
+							th Other Participant
+							th Amount
+							th Effective Date
+							th Maturity Date
+
+							tbody
+							each irs in IRSs.completed
+								- var effectiveDate = new Date(irs.effectiveDate)
+								- var effectiveDateStr = effectiveDate.toUTCString()
+								- var maturityDate = new Date(irs.maturityDate)
+								- var maturityDateStr = maturityDate.toUTCString()
+								- var participant1IsUser = irs.participant1.substring(36) == userStr
+								- var otherParticipantStr = (participant1IsUser ? irs.participant2 : irs.participant1).substring(36)
+								- var viewHREF = "/manage/view?id=" + irs.id
+								- var approveHREF = "/manage/approve?id=" + irs.id
+								- var denyHREF = "/manage/deny?id=" + irs.id
+								
+								tr
+									td
+										a(href=viewHREF)= irs.id
+									td= otherParticipantStr
+									td= "$" + irs.value
+									td= effectiveDateStr
+									td= maturityDateStr
+				else
+					h3.content-header
+						span Nothing here yet!
+			else if userType == "LIBORAuthority"
+				div.container
+					div.row
+						div.well.col-sm-6.col-sm-offset-3
+							form(action="/manage/postLIBOR", method="POST").form-horizontal
+								include error-notifs.pug
+								fieldset(id="inputFields")
+									div.h1.irs-header New LIBOR Index
+									div.form-group
+										label(for="date").col-sm-2.control-label Date
+										div.col-sm-10.is-empty(id="dateInput")
+											input(autocomplete="off", type="select", placeholder="MM/DD/YYYY" name="date").form-control#date
+
+									div.form-group
+										label(for="tenor").col-sm-2.control-label Tenor
+										div.col-sm-10(id="tenorInput")
+											select(type="select", name="tenor").form-control#tenor
+												option  
+												option DAILY
+												option WEEKLY
+												option ONE_MONTH
+												option TWO_MONTH
+												option THREE_MONTH
+												option SEMI_ANNUALLY
+												option ANNUALLY
+									div.form-group
+										label(for="LIBORValue").col-sm-2.control-label Value
+										div.col-sm-10.is-empty(id="LIBORValueInput")
+											input(autocomplete="off", type="number", step="0.001", name="LIBORValue").form-control#LIBORValue
+									div.form-group
+										div.col-sm-offset-2.col-sm-10
+											button(type="submit" id="postLIBOR" disabled="true").btn.btn-primary Post LIBOR
+			else
+				div.row.irs-header
+					h1.content-header
+						span.table-with-button-header-text Unknown Participant Type
+					h4.content-header
+						span.table-with-button-header-text Sorry :(
+		
+		include bootstrap-js.pug
+		script(src="/static/js/manage.js" type="text/javascript")
