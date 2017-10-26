@@ -1,2 +1,2 @@
-# hlf-commercial-paper-ui
-The front-end of the Hyperledger Fabric commercial paper demo
+# irs-paper-ui
+The front-end of the Hyperledger Fabric interest rate swap demo
