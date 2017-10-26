@@ -1,2 +1,2 @@
-# irs-paper-ui
+# irs-ui
 The front-end of the Hyperledger Fabric interest rate swap demo
