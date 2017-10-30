@@ -29,8 +29,10 @@ function checkIdentitySelected(req, res, next) {
 - completed (all payments have been settled)
 */
 function loadIRS(req, res, next) {
-	rest.getCompanyInfo(req.session.defaultIdentity.participant, (getUserInfoRes, getUserInfoErr) => { //retrieve all IRSs
-		var cb = function(getUserInfoRes, getUserInfoErr) {
+	rest.getUserInfo(req.session.defaultIdentity.participant, (getUserInfoRes, getUserInfoErr) => {
+		if (getUserInfoErr) {
+			res.render('manage');
+		} else {
 			rest.getAllIRSs((getIRSres, getIRSerr) => {
 				//confirm no errors
 				if (getIRSerr) {
@@ -40,9 +42,9 @@ function loadIRS(req, res, next) {
 					};
 					return next(getIRSerr);
 				}
-	
+
 				var userType = getUserInfoRes.$class.substring(namespace.length + 1);
-	
+
 				//filter IRSs
 				var filtered = util.filterIRSs(getIRSres, req.session.defaultIdentity.participant);
 				var relevantIRSs = {};
@@ -50,18 +52,10 @@ function loadIRS(req, res, next) {
 				relevantIRSs.pending = filtered.pending;
 				relevantIRSs.inprogress = filtered.inprogress;
 				relevantIRSs.completed = filtered.completed;
-				
+
 				//load page
 				res.render('manage', { userType: userType, userStr: getUserInfoRes.name, userBalance: getUserInfoRes.balance, IRSs: relevantIRSs });
 			});
-		}
-
-		if (getUserInfoErr) { // try if user is actually a LIBOR Authority
-			rest.getLIBORAuthorityInfo(req.session.defaultIdentity.participant, (getUserInfoRes, getUserInfoErr) => {
-				cb(getUserInfoRes, getUserInfoErr);
-			});
-		} else {
-			cb(getUserInfoRes, getUserInfoErr);
 		}
 	});
 }

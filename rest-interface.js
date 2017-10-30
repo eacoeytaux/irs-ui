@@ -8,6 +8,21 @@ restServer.setServerConfig = function(config) {
 	restServer.serverConfig = config;
 }
 
+restServer.getUserInfo = function(participantID, cb) {
+	//check each type of participant to see what kind of participant user is
+
+	//first check Companies
+	restServer.getCompanyInfo(participantID, (companyRes, companyErr) => {
+		if (companyErr) {
+			restServer.getLIBORAuthorityInfo(participantID, (liborRes, liborErr) => {
+				cb(liborRes, liborErr);
+			});
+		} else {
+			cb(companyRes, companyErr);
+		}
+	});
+}
+
 restServer.getLIBORAuthorityInfo = function(participantID, cb) {
 	var reqOptions = {
 		host: restServer.serverConfig.host,

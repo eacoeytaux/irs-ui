@@ -16,7 +16,7 @@ if (document.getElementById('tenor')) {
 			checkInputs();
 			return;
 		}
-		document.getElementById('tenorInput').className = 'col-sm-10 has-error';
+		document.getElementById('tenorInput').className = 'col-sm-10 is-empty';
 		checkInputs();
 	}
 	document.getElementById('tenor').addEventListener('change', checkInput);
@@ -26,7 +26,11 @@ if (document.getElementById('tenor')) {
 if (document.getElementById('date')) {
 	var checkInput = function () {
 		var val = document.getElementById('date').value;
-		if (val.length == 10) {
+		if (val == "") {
+			document.getElementById('dateInput').className = 'col-sm-10 is-empty';
+			checkInputs();
+			return;
+		} else if (val.length == 10) {
 			var month = parseInt(val.substring(0, 2));
 			var day = parseInt(val.substring(3, 5));
 			var year = parseInt(val.substring(6, 10));
@@ -54,6 +58,11 @@ if (document.getElementById('date')) {
 if (document.getElementById('LIBORValue')) {
 	var checkInput = function () {
 		var val = document.getElementById('LIBORValue').value;
+		if (val == "") {
+			document.getElementById('LIBORValueInput').className = 'col-sm-10 is-empty';
+			checkInputs();
+			return;
+		}
 		val = parseFloat(val);
 		if (!isNaN(val) && (val > 0)) {
 			document.getElementById('LIBORValueInput').className = 'col-sm-10 has-success';
