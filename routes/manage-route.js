@@ -22,10 +22,17 @@ function checkIdentitySelected(req, res, next) {
 	return next();
 }
 
+/** retrieves all IRSs from the REST server, then filters them to only show IRSs that involve the current participants and sorts them into categories:
+- proposed (other participant has not yet approved)
+- pending (current participant has not yet approved)
+- in progress (both participants have approved but not all payments have been settled)
+- completed (all payments have been settled)
+*/
 function loadIRS(req, res, next) {
-	rest.getCompanyInfo(req.session.defaultIdentity.participant, (getUserInfoRes, getUserInfoErr) => {
+	rest.getCompanyInfo(req.session.defaultIdentity.participant, (getUserInfoRes, getUserInfoErr) => { //retrieve all IRSs
 		var cb = function(getUserInfoRes, getUserInfoErr) {
 			rest.getAllIRSs((getIRSres, getIRSerr) => {
+				//confirm no errors
 				if (getIRSerr) {
 					getIRSerr.renderPage = 'manage';
 					getIRSerr.renderPageData = {
@@ -34,17 +41,17 @@ function loadIRS(req, res, next) {
 					return next(getIRSerr);
 				}
 	
-				console.log(getUserInfoErr)
-	
 				var userType = getUserInfoRes.$class.substring(namespace.length + 1);
 	
+				//filter IRSs
 				var filtered = util.filterIRSs(getIRSres, req.session.defaultIdentity.participant);
 				var relevantIRSs = {};
 				relevantIRSs.proposed = filtered.proposed;
 				relevantIRSs.pending = filtered.pending;
 				relevantIRSs.inprogress = filtered.inprogress;
 				relevantIRSs.completed = filtered.completed;
-				//console.log(relevantIRSs);
+				
+				//load page
 				res.render('manage', { userType: userType, userStr: getUserInfoRes.name, userBalance: getUserInfoRes.balance, IRSs: relevantIRSs });
 			});
 		}
@@ -97,6 +104,7 @@ router.get('/settle', checkIdentitySelected, (req, res, next) => {
 
 router.post('/propose', checkIdentitySelected, (req, res, next) => {
 
+	//fill required fields
 	var irs = {};
 	irs.company = req.body.company;
 	irs.value = parseFloat(req.body.IRSValue);
@@ -117,21 +125,24 @@ router.post('/propose', checkIdentitySelected, (req, res, next) => {
 	irs.maturityDate = util.determineDate(req.body.maturityDate, error);
 	irs.maturityDate.setUTCMonth(irs.maturityDate.getUTCMonth() - 1);
 
+	//determine interest rate depending on type user has selected
 	var determineInterestRate = function (numStr) {
 		var interestRateObj = {}
 		interestRateObj.type = req.body["interestRate" + numStr].replace(/ /g, '');
 		switch (req.body["interestRate" + numStr]) {
 			case 'Fixed Rate':
 				interestRateObj.rate = req.body["fixedRate" + numStr];
+				//confirm rate is a valid number
 				if (isNaN(interestRateObj.rate) || (interestRateObj.rate < 0)) {
 					error.msgs.push({ msg: "Fixed rate must be a number greater than 0" });
 				}
 				break;
 			case 'LIBOR Index':
+				//value is selected from drop down so little error checking needs to be done
 				interestRateObj.tenor = req.body["liborTenor" + numStr];
 				break;
 			default:
-				//TODO error
+				throw new Error('Unrecognized interest rate type ' + req.body["interestRate" + numStr]);
 				break;
 		}
 		return JSON.stringify(interestRateObj);
@@ -139,9 +150,6 @@ router.post('/propose', checkIdentitySelected, (req, res, next) => {
 
 	irs.interestRate1 = determineInterestRate("1");
 	irs.interestRate2 = determineInterestRate("2");
-
-	//console.log('Proposed IRS:', irs);
-
 
 	if (error.msgs.length > 0) {
 		return next(error);
@@ -159,6 +167,7 @@ router.post('/propose', checkIdentitySelected, (req, res, next) => {
 
 router.post('/postLIBOR', checkIdentitySelected, (req, res, next) => {
 
+	//fill required fields
 	var libor = {};
 	libor.tenor = req.body.tenor;
 	libor.rate = parseFloat(req.body.LIBORValue);

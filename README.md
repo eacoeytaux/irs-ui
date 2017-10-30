@@ -1,5 +1,7 @@
-# irs-ui
+# Hyperleder Fabric interest rate swap demo UI
 The front-end of the Hyperledger Fabric interest rate swap demo
+
+## Usage
 
 - First, start the server with `node index.js`
 - To log in, you must start the rest server found at github.com/eacoeytaux/irs with the command `npm install && composer network deploy -a dist/irs.bna -p hlfv1 -i PeerAdmin -s randomString && source rest_config.sh && composer-rest-server -p hlfv1 -n irs -i admin -s adminpw -N never -w true`.
