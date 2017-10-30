@@ -10,21 +10,22 @@ function checkInputs() {
 }
 
 if (document.getElementById('tenor')) {
-	document.getElementById('tenor').addEventListener('change', function () {
-		if (this.value != '') {
+	var checkInput = function () {
+		if (document.getElementById('tenor').value != '') {
 			document.getElementById('tenorInput').className = 'col-sm-10 has-success';
 			checkInputs();
 			return;
 		}
 		document.getElementById('tenorInput').className = 'col-sm-10 has-error';
 		checkInputs();
-
-	});
+	}
+	document.getElementById('tenor').addEventListener('change', checkInput);
+	setInterval(checkInput, 1000);
 }
 
 if (document.getElementById('date')) {
-	document.getElementById('date').addEventListener('change', function () {
-		var val = this.value;
+	var checkInput = function () {
+		var val = document.getElementById('date').value;
 		if (val.length == 10) {
 			var month = parseInt(val.substring(0, 2));
 			var day = parseInt(val.substring(3, 5));
@@ -45,12 +46,14 @@ if (document.getElementById('date')) {
 		}
 		document.getElementById('dateInput').className = 'col-sm-10 has-error';
 		checkInputs();
-	});
+	}
+	document.getElementById('date').addEventListener('change', checkInput);
+	setInterval(checkInput, 1000);
 }
 
 if (document.getElementById('LIBORValue')) {
-	document.getElementById('LIBORValue').addEventListener('change', function () {
-		var val = this.value;
+	var checkInput = function () {
+		var val = document.getElementById('LIBORValue').value;
 		val = parseFloat(val);
 		if (!isNaN(val) && (val > 0)) {
 			document.getElementById('LIBORValueInput').className = 'col-sm-10 has-success';
@@ -59,6 +62,7 @@ if (document.getElementById('LIBORValue')) {
 		}
 		document.getElementById('LIBORValueInput').className = 'col-sm-10 has-error';
 		checkInputs();
-
-	});
+	}
+	document.getElementById('LIBORValue').addEventListener('change', checkInput);
+	setInterval(checkInput, 1000);
 }

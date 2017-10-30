@@ -10,21 +10,32 @@ function checkInputs() {
 }
 
 if (document.getElementById('company')) {
-	document.getElementById('company').addEventListener('change', function () {
-		if (this.value != '') {
+	var checkInput = function () {
+		if (document.getElementById('company').value != '') {
 			document.getElementById('companyInput').className = 'col-sm-10 has-success';
+			checkInputs();
+			return;
+		} else {
+			document.getElementById('companyInput').className = 'col-sm-10 is-empty';
 			checkInputs();
 			return;
 		}
 		document.getElementById('companyInput').className = 'col-sm-10 has-error';
 		checkInputs();
-
-	});
+	}
+	document.getElementById('company').addEventListener('change', checkInput);
+	setInterval(checkInput, 1000);
 }
 
 if (document.getElementById('IRSValue')) {
-	document.getElementById('IRSValue').addEventListener('change', function () {
-		var val = this.value;
+	var checkInput = function () {
+		if (document.getElementById('IRSValue').value == '') {
+			document.getElementById('IRSValueInput').className = 'col-sm-10 is-empty';
+			checkInputs();
+			return;
+		}
+
+		var val = document.getElementById('IRSValue').value;
 		val = parseFloat(val);
 		if (!isNaN(val) && (val > 0)) {
 			document.getElementById('IRSValueInput').className = 'col-sm-10 has-success';
@@ -33,26 +44,39 @@ if (document.getElementById('IRSValue')) {
 		}
 		document.getElementById('IRSValueInput').className = 'col-sm-10 has-error';
 		checkInputs();
-
-	});
+	}
+	document.getElementById('IRSValue').addEventListener('change', checkInput);
+	setInterval(checkInput, 1000);
 }
 
 if (document.getElementById('tenor')) {
-	document.getElementById('tenor').addEventListener('change', function () {
-		if (this.value != '') {
+	var checkInput = function () {
+		if (document.getElementById('tenor').value != '') {
 			document.getElementById('tenorInput').className = 'col-sm-10 has-success';
+			checkInputs();
+			return;
+		} else {
+			document.getElementById('tenorInput').className = 'col-sm-10 is-empty';
 			checkInputs();
 			return;
 		}
 		document.getElementById('tenorInput').className = 'col-sm-10 has-error';
 		checkInputs();
 
-	});
+	}
+	document.getElementById('tenor').addEventListener('change', checkInput);
+	setInterval(checkInput, 1000);
 }
 
 if (document.getElementById('effectiveDate')) {
-	document.getElementById('effectiveDate').addEventListener('change', function () {
-		var val = this.value;
+	var checkInput = function () {
+		if (document.getElementById('effectiveDate').value == '') {
+			document.getElementById('effectiveDateInput').className = 'col-sm-10 is-empty';
+			checkInputs();
+			return;
+		}
+
+		var val = document.getElementById('effectiveDate').value;
 		if (val.length == 10) {
 			var month = parseInt(val.substring(0, 2));
 			var day = parseInt(val.substring(3, 5));
@@ -73,12 +97,20 @@ if (document.getElementById('effectiveDate')) {
 		}
 		document.getElementById('effectiveDateInput').className = 'col-sm-10 has-error';
 		checkInputs();
-	});
+	}
+	document.getElementById('effectiveDate').addEventListener('change', checkInput);
+	setInterval(checkInput, 1000);
 }
 
 if (document.getElementById('maturityDate')) {
-	document.getElementById('maturityDate').addEventListener('change', function () {
-		var val = this.value;
+	var checkInput = function () {
+		if (document.getElementById('maturityDate').value == '') {
+			document.getElementById('maturityDateInput').className = 'col-sm-10 is-empty';
+			checkInputs();
+			return;
+		} else {
+
+		var val = document.getElementById('maturityDate').value;
 		if (val.length == 10) {
 			var month = parseInt(val.substring(0, 2));
 			var day = parseInt(val.substring(3, 5));
@@ -99,109 +131,88 @@ if (document.getElementById('maturityDate')) {
 		}
 		document.getElementById('maturityDateInput').className = 'col-sm-10 has-error';
 		checkInputs();
-	});
+	}
+	};
+	document.getElementById('maturityDate').addEventListener('change', checkInput);
+	setInterval(checkInput, 1000);
 }
 
 if (document.getElementById('interestRate1')) {
-	document.getElementById('interestRate1').addEventListener('change', function () {
-		if (this.value != '') {
+	var checkInput = function () {
+		if (document.getElementById('interestRate1').value != '') {
 			document.getElementById('interestRate1Input').className = 'col-sm-10 has-success';
+			checkInputs();
+			return;
+		} else {
+			document.getElementById('interestRate1Input').className = 'col-sm-10 is-empty';
 			checkInputs();
 			return;
 		}
 		document.getElementById('interestRate1Input').className = 'col-sm-10 has-error';
 		checkInputs();
 
-	});
+	}
+	document.getElementById('interestRate1').addEventListener('change', checkInput);
+	setInterval(checkInput, 1000);
 }
 
 if (document.getElementById('interestRate2')) {
-	document.getElementById('interestRate2').addEventListener('change', function () {
-		if (this.value != '') {
+	var checkInput = function () {
+		if (document.getElementById('interestRate2').value != '') {
 			document.getElementById('interestRate2Input').className = 'col-sm-10 has-success';
+			checkInputs();
+			return;
+		} else {
+			document.getElementById('interestRate2Input').className = 'col-sm-10 is-empty';
 			checkInputs();
 			return;
 		}
 		document.getElementById('interestRate2Input').className = 'col-sm-10 has-error';
 		checkInputs();
 
-	});
-}
-
-if (document.getElementById('allowUnwind')) {
-	document.getElementById('allowUnwind').addEventListener('click', function () {
-		if (this.checked) {
-			document.getElementById('marketValue').disabled = false;
-
-			if (document.getElementById('marketValue').value != '') {
-				var val = document.getElementById('marketValue').value;
-				val = parseFloat(val);
-				if (!isNaN(val) && (val > 0)) {
-					document.getElementById('marketValueInput').className = 'col-sm-10 has-success';
-					checkInputs();
-					return;
-				}
-				document.getElementById('marketValueInput').className = 'col-sm-10 has-error';
-				checkInputs();
-			} else {
-				document.getElementById('marketValueInput').className = 'col-sm-10 is-empty';
-				checkInputs();
-			}
-		} else {
-
-			document.getElementById('marketValue').disabled = true;
-			document.getElementById('marketValueInput').className = 'col-sm-10';
-			checkInputs();
-		}
-	});
-}
-
-if (document.getElementById('marketValue')) {
-	document.getElementById('marketValue').addEventListener('change', function () {
-		var val = this.value;
-		val = parseFloat(val);
-		if (!isNaN(val) && (val > 0)) {
-			document.getElementById('marketValueInput').className = 'col-sm-10 has-success';
-			checkInputs();
-			return;
-		}
-		document.getElementById('marketValueInput').className = 'col-sm-10 has-error';
-		checkInputs();
-
-	});
+	}
+	document.getElementById('interestRate2').addEventListener('change', checkInput);
+	setInterval(checkInput, 1000);
 }
 
 if ((document.getElementById('interestRate1Select')) && (document.getElementById('interestRate2Select'))) {
 	var inputfields = document.getElementById('inputFields');
 
 	var addInputFields = function (value, nextElement, num) {
-		var ir1fields = document.getElementsByClassName('interestRate' + num + 'Fields');
+		var irfields = document.getElementsByClassName('interestRate' + num + 'Fields');
 
 		//remove all current input fields
-		for (var i = 0; i < ir1fields.length; i++) {
-			inputfields.removeChild(ir1fields[i]);
+		for (var i = 0; i < irfields.length; i++) {
+			inputfields.removeChild(irfields[i]);
 		}
 
-
 		switch (value) {
-			case 'Fixed':
+			case 'Fixed Rate':
 				var newDiv = document.createElement('div');
 				newDiv.className = 'form-group interestRate' + num + 'Fields';
 				newDiv.innerHTML = '<label class="col-sm-2 control-label" for="fixedRate' + num + '">Value</label>' +
 					'<div class="col-sm-10 is-empty" id="fixedRate' + num + 'Input"><input class="form-control" autocomplete="off" name="fixedRate' + num + '" id="fixedRate' + num + '" type="number" step="0.001"></div>';
 				inputfields.insertBefore(newDiv, nextElement);
-				document.getElementById('fixedRate' + num).addEventListener('change', function () {
-					var val = this.value;
+				
+				var checkInput = function () {
+					var val = document.getElementById('fixedRate' + num).value;
 					val = parseFloat(val);
 					if (!isNaN(val) && (val > 0)) {
 						document.getElementById('fixedRate' + num + 'Input').className = 'col-sm-10 has-success';
+						checkInputs();
+						return;
+					} else {
+						document.getElementById('fixedRate' + num + 'Input').className = 'col-sm-10 is-empty';
 						checkInputs();
 						return;
 					}
 					document.getElementById('fixedRate' + num + 'Input').className = 'col-sm-10 has-error';
 					checkInputs();
 
-				});
+				}
+				document.getElementById('fixedRate' + num).addEventListener('change', checkInput);
+				setInterval(checkInput, 1000);
+
 				document.getElementById('interestRate' + num + 'Input').className = 'col-sm-10 has-success';
 				checkInputs();
 				break;
@@ -220,15 +231,21 @@ if ((document.getElementById('interestRate1Select')) && (document.getElementById
 					'<option>ANNUALLY</option>' +
 					'</select></div>';
 				inputfields.insertBefore(newDiv, nextElement);
-				document.getElementById('liborTenor' + num).addEventListener('change', function () {
-					if (this.value != '') {
+				var checkInput = function () {
+					if (document.getElementById('liborTenor' + num).value != '') {
 						document.getElementById('liborTenor' + num + 'Input').className = 'col-sm-10 has-success';
 						checkInputs();
 						return;
-					}
+					} else {
+						document.getElementById('liborTenor' + num + 'Input').className = 'col-sm-10 is-empty';
+						checkInputs();
+						return;
+					} 
 					document.getElementById('liborTenor' + num + 'Input').className = 'col-sm-10 has-error';
 					checkInputs();
-				});
+				}
+				document.getElementById('liborTenor' + num).addEventListener('change', checkInput);
+				setInterval(checkInput, 1000);
 				document.getElementById('interestRate' + num + 'Input').className = 'col-sm-10 has-success';
 				checkInputs();
 				break;
@@ -243,6 +260,6 @@ if ((document.getElementById('interestRate1Select')) && (document.getElementById
 		addInputFields(document.getElementById('interestRate1').value, document.getElementById('otherInterestRate'), 1);
 	});
 	document.getElementById('interestRate2').addEventListener('change', function () {
-		addInputFields(document.getElementById('interestRate2').value, document.getElementById('optionalParametersLabel'), 2);
+		addInputFields(document.getElementById('interestRate2').value, document.getElementById('proposeBtn'), 2);
 	});
 }

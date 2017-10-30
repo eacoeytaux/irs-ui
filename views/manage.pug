@@ -11,14 +11,13 @@ html
 			include error-notifs.pug
 
 			if userType == "Company"
-				div.row.irs-header
-					a(href="/manage").btn.btn-info.pull-left
-						span.glyphicon.glyphicon-refresh.button-glyphicon
-						span.button-text Refresh
 
 				div.row.irs-header
 					h1.content-header
 						span.table-with-button-header-text= userStr + "'s current balance: $" + userBalance.toFixed(2)
+						a(href="/manage").btn.btn-info.pull-right
+							span.glyphicon.glyphicon-refresh.button-glyphicon
+							span.button-text Refresh
 
 				div.row.irs-header
 					h1.content-header

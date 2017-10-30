@@ -49,12 +49,11 @@ function loadIRS(req, res, next) {
 			});
 		}
 
-		if (getUserInfoErr) {
+		if (getUserInfoErr) { // try if user is actually a LIBOR Authority
 			rest.getLIBORAuthorityInfo(req.session.defaultIdentity.participant, (getUserInfoRes, getUserInfoErr) => {
 				cb(getUserInfoRes, getUserInfoErr);
 			});
 		} else {
-
 			cb(getUserInfoRes, getUserInfoErr);
 		}
 	});
@@ -90,6 +89,7 @@ router.get('/deny', checkIdentitySelected, (req, res, next) => {
 });
 
 router.get('/settle', checkIdentitySelected, (req, res, next) => {
+
 	rest.settleIRSPayment(req.query.id, req.query.index, (approveIRSRes, approveIRSErr) => {
 		res.redirect('/manage/view?id=' + req.query.id);
 	});
@@ -115,13 +115,13 @@ router.post('/propose', checkIdentitySelected, (req, res, next) => {
 	irs.effectiveDate = util.determineDate(req.body.effectiveDate, error);
 	irs.effectiveDate.setUTCMonth(irs.effectiveDate.getUTCMonth() - 1);
 	irs.maturityDate = util.determineDate(req.body.maturityDate, error);
-	irs.effectiveDate.setUTCMonth(irs.effectiveDate.getUTCMonth() - 1);
+	irs.maturityDate.setUTCMonth(irs.maturityDate.getUTCMonth() - 1);
 
 	var determineInterestRate = function (numStr) {
 		var interestRateObj = {}
 		interestRateObj.type = req.body["interestRate" + numStr].replace(/ /g, '');
 		switch (req.body["interestRate" + numStr]) {
-			case 'Fixed':
+			case 'Fixed Rate':
 				interestRateObj.rate = req.body["fixedRate" + numStr];
 				if (isNaN(interestRateObj.rate) || (interestRateObj.rate < 0)) {
 					error.msgs.push({ msg: "Fixed rate must be a number greater than 0" });
@@ -190,16 +190,5 @@ router.post('/postLIBOR', checkIdentitySelected, (req, res, next) => {
 		res.redirect('/manage');
 	});
 });
-
-/*router.get('/purchase', checkIdentitySelected, (req, res, next) => {
-	rest.getAllPurchaseablePaper(req.session.defaultIdentity.participant, (getPapersRes, getPapersErr) => {
-		if (getPapersErr) {
-			getPapersErr.renderPage = 'purchase-paper';
-			return next(getPapersErr);
-		}
-
-		res.render('purchase-paper', { availablePapers: getPapersRes });
-	});
-});*/
 
 module.exports = router;
